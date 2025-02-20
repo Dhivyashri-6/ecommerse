@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aurora Gems - Checkout</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #fff7f0;
+            padding-top: 80px;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            font-family: 'Arial', sans-serif;
+        }
+
+        .checkout-container {
+            max-width: 700px;
+            margin: auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        h2, h4 {
+            color: rgb(118, 61, 72);
+        }
+
+        .btn-primary {
+            background-color: rgb(118, 61, 72);
+            border: none;
+        }
+
+        .btn-primary:hover {
+            background-color: #732d91;
+        }
+
+        .order-success {
+            display: none; /* Initially hidden */
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 10px;
+            background-color: #e0ffe0;
+            text-align: center;
+        }
+
+        footer {
+            background-color: rgb(118, 61, 72);
+            color: white;
+            text-align: center;
+            padding: 15px 0;
+            margin-top: auto;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="#">Aurora Gems</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="home.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+                    <li class="nav-item"><a class="nav-link" href="shop.html">Shop</a></li>
+                    <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
+                    <li class="nav-item"><a class="nav-link" href="cart.html">Cart</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container checkout-container mt-5">
+        <h2 class="text-center">Checkout</h2>
+        
+        <form id="checkoutForm" onsubmit="return processOrder(event)">
+            <h4 class="text-center">Billing Details</h4>
+            <div class="mb-3">
+                <label for="name" class="form-label">Full Name</label>
+                <input type="text" class="form-control" id="name" required>
+            </div>
+            <div class="mb-3">
+                <label for="email" class="form-label">Email</label>
+                <input type="email" class="form-control" id="email" required>
+            </div>
+            <div class="mb-3">
+                <label for="address" class="form-label">Address</label>
+                <input type="text" class="form-control" id="address" required>
+            </div>
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="pincode" class="form-label">Pincode</label>
+                    <input type="text" class="form-control" id="pincode" pattern="^[0-9]{6}$" required>
+                    <small class="text-muted">Enter a 6-digit pincode.</small>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="state" class="form-label">State</label>
+                    <input type="text" class="form-control" id="state" required>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label for="mobile" class="form-label">Mobile Number</label>
+                <input type="text" class="form-control" id="mobile" pattern="^[0-9]{10}$" required>
+                <small class="text-muted">Enter a 10-digit mobile number.</small>
+            </div>
+
+            <h4>Payment Details</h4>
+            <div class="mb-3">
+                <label for="payment" class="form-label">Way of Payment</label>
+                <select class="form-control" id="payment" required>
+                    <option value="credit_card">Credit Card</option>
+                    <option value="debit_card">Debit Card</option>
+                    <option value="paypal">GPay</option>
+                    <option value="cod">Cash on Delivery</option>
+                </select>
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100">Submit Order</button>
+        </form>
+
+        <!-- Order Success Section -->
+        <div id="orderSuccess" class="order-success">
+            <h3>Order Successful!</h3>
+            <p><strong>Order Details:</strong></p>
+            <p id="orderDetails"></p>
+        </div>
+    </div>
+
+    <footer class="bg-dark text-white text-center p-3 mt-5">
+        <p>© 2025 Aurora Gems. All rights reserved.</p>
+        <p>Follow us:
+            <a href="#" class="text-white">Instagram</a> |
+            <a href="#" class="text-white">Facebook</a>
+        </p>
+    </footer>
+
+    <script>
+        function processOrder(event) {
+            event.preventDefault(); // Prevent default form submission
+
+            // Validate form
+            if (!validateForm()) {
+                return false;
+            }
+
+            // Get form values
+            const name = document.getElementById("name").value;
+            const email = document.getElementById("email").value;
+            const address = document.getElementById("address").value;
+            const pincode = document.getElementById("pincode").value;
+            const state = document.getElementById("state").value;
+            const mobile = document.getElementById("mobile").value;
+            const payment = document.getElementById("payment").value;
+
+            // Display order details
+            const orderDetails = `
+                <strong>Name:</strong> ${name}<br>
+                <strong>Email:</strong> ${email}<br>
+                <strong>Address:</strong> ${address}<br>
+                <strong>Pincode:</strong> ${pincode}<br>
+                <strong>State:</strong> ${state}<br>
+                <strong>Mobile:</strong> ${mobile}<br>
+                <strong>Payment Method:</strong> ${payment}
+            `;
+
+            document.getElementById("orderDetails").innerHTML = orderDetails;
+
+            // Show the order success section
+            document.getElementById("orderSuccess").style.display = "block";
+
+            // Reset form after order is processed
+            document.getElementById("checkoutForm").reset();
+        }
+
+        function validateForm() {
+            const email = document.getElementById("email").value;
+            if (!email.includes("@gmail.com")) {
+                alert("Please enter a valid email address.");
+                return false;
+            }
+            return true;
+        }
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>
